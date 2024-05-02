@@ -2,24 +2,12 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
-#from sklearn.metrics import confusion_matrix
+from typing import Tuple,Optional
+from typing import Union
+# from sklearn.metrics import confusion_matrix
 
 # ----------------------------------------------------------------------
 
-def confusion_matrix(true_labels, predicted_labels):
-    # Extract the unique classes
-    classes = np.unique(np.concatenate((true_labels, predicted_labels)))
-    # Initialize the confusion matrix with zeros
-    conf_matrix = np.zeros((len(classes), len(classes)), dtype=int)
-
-    # Map each class to an index
-    class_index = {cls: idx for idx, cls in enumerate(classes)}
-
-    # Populate the confusion matrix
-    for true, pred in zip(true_labels, predicted_labels):
-        conf_matrix[class_index[true]][class_index[pred]] += 1
-
-    return conf_matrix
 
 def compute_SSE(data, labels):
     """
@@ -183,14 +171,20 @@ def extract_samples(
 
 # ----------------------------------------------------------------------
 
+def confusion_matrix(true_labels, predicted_labels):
+    
+    classes = np.unique(np.concatenate((true_labels, predicted_labels)))
+    conf_matrix = np.zeros((len(classes), len(classes)), dtype=int)
+    class_index = {cls: idx for idx, cls in enumerate(classes)}
+    for true, pred in zip(true_labels, predicted_labels):
+        conf_matrix[class_index[true]][class_index[pred]] += 1
+    return conf_matrix
 
-def em_algorithm(data: NDArray[np.floating], max_iter: int = 100) -> tuple[
-    NDArray[np.floating] | None,
-    NDArray[np.floating] | None,
-    NDArray[np.floating] | None,
-    NDArray[np.floating] | None,
-    NDArray[np.floating] | None,
-]:
+def em_algorithm(data: NDArray[np.floating], max_iter: int = 100) -> Tuple[Union[NDArray[np.floating], None], 
+                                                                         Union[NDArray[np.floating], None], 
+                                                                         Union[NDArray[np.floating], None], 
+                                                                         Union[NDArray[np.floating], None], 
+                                                                         Union[NDArray[np.floating], None]]:
     """
     Arguments:
     - data: numpy array of shape 50,000 x 2
