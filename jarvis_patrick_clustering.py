@@ -45,7 +45,7 @@ def jarvis_patrick(
     - The metric  used to compute the the k-nearest neighberhood of all points is the Euclidean metric
     """
     def create_shared_neighbor_matrix(data, k, t):
-        """Create matrix of shared neighbors based on Jarvis-Patrick criteria."""
+       
         distance_matrix = squareform(pdist(data, 'euclidean'))
         neighbors = np.argsort(distance_matrix, axis=1)[:, 1:k+1]
         n = len(data)
@@ -60,7 +60,7 @@ def jarvis_patrick(
         return adjacency_matrix
 
     def calculate_sse(data, labels, cluster_centers, cluster_map):
-        """Calculate Sum of Squared Errors (SSE) for clusters."""
+        
         sse = 0.0
         for k, center_index in cluster_map.items():
             if k >= 0:  # Ensure we're only considering valid cluster indices
@@ -109,7 +109,7 @@ def jarvis_patrick(
 
 
     def dbscan_custom(matrix, data, minPts):
-        """Custom implementation of DBSCAN using shared neighbor matrix."""
+        
         n = matrix.shape[0]
         pred_labels = -np.ones(n)
         cluster_id = 0
@@ -181,9 +181,9 @@ def jarvis_patrick_clustering():
     data = np.load('question1_cluster_data.npy')[:5000]
     labels = np.load('question1_cluster_labels.npy')[:5000]
     params_dict = {}
-    best_ari = -np.inf
+    b_ari = -np.inf
     best_sse = np.inf
-    best_params_ari = {}
+    best_ari = {}
     best_params_sse = {}
 
     # Dictionary to store all results for visualization
@@ -199,17 +199,17 @@ def jarvis_patrick_clustering():
             results.append((k, smin, SSE, ARI))
 
             # Check if this combination gives a higher ARI or lower SSE
-            if ARI > best_ari:
-                best_ari = ARI
-                best_params_ari = {'k': k, 'smin': smin, 'ARI': ARI}
+            if ARI > b_ari:
+                b_ari = ARI
+                best_ari = {'k': k, 'smin': smin, 'ARI': ARI}
             if SSE < best_sse:
                 best_sse = SSE
                 best_params_sse = {'k': k, 'smin': smin, 'SSE': SSE}
 
-    # Organize results into a dictionary
+   
     best_results = {
         "results": results,
-        "best_params_ari": best_params_ari,
+        "best_ari": best_ari,
         "best_params_sse": best_params_sse
     }
 
@@ -221,8 +221,8 @@ def jarvis_patrick_clustering():
 
     # Create a dictionary for each parameter pair ('sigma' and 'xi').
     groups = {}
-    final_k = best_params_ari['k']
-    final_smin = best_params_ari['smin']
+    final_k = best_ari['k']
+    final_smin = best_ari['smin']
     max_ari_data = None
     max_ari_labels = None
     min_sse_data = None
