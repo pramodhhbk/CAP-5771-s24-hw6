@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
 import pickle
-from scipy.cluster.vq import kmeans2
 from scipy.linalg import eigh
+from scipy.cluster.vq import kmeans2
 from typing import Tuple,Optional
 
 ######################################################################
@@ -108,7 +108,7 @@ def spectral(
     # Compute eigenvectors and eigenvalues
     eigenvalues, eigenvectors = eigh(laplacian_matrix)
 
-    # Perform k-means clustering on the eigenvectors with k-means++ initialization
+    # using scipy kmeans2 inbuilt function rather than implementing kmeans from scratch.
     _, computed_labels = kmeans2(eigenvectors[:, 1:k], k, minit='++')
 
     # Compute SSE
@@ -144,6 +144,11 @@ def spectral_hyperparameter_study(data, labels):
         ari_scores.append(ari)
 
     return sigmas, np.array(ari_scores), np.array(sse_scores)
+
+def proximity_measure(x, y, sigma):
+
+    dist_squared = np.sum((x - y) ** 2)
+    return np.exp(-dist_squared / (2 * sigma ** 2))
 
 def spectral_clustering():
     """
